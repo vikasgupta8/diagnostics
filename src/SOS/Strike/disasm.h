@@ -410,6 +410,75 @@ private:
 }; // class ARM64Machine
 
 #endif // SOS_TARGET_ARM64
+
+#ifdef SOS_TARGET_POWERPC64
+/// PPC64LE Machine specific code
+class PPC64LEMachine : public IMachine
+{
+public:
+    typedef POWERPC64_CONTEXT TGT_CTXT;
+
+    static IMachine* GetInstance()
+    { static PPC64LEMachine s_PPC64LEMachineInstance; return &s_PPC64LEMachineInstance; }
+
+    ULONG GetPlatform()             const { return IMAGE_FILE_MACHINE_POWERPC; }
+    ULONG GetContextSize()          const { return sizeof(POWERPC64_CONTEXT); }
+    ULONG GetFullContextFlags()     const { return 0x0100000BL; }
+    void SetContextFlags(BYTE* context, ULONG32 contextFlags)   { ((POWERPC64_CONTEXT*)context)->ContextFlags = contextFlags; };
+
+    virtual void Unassembly(
+                TADDR IPBegin,
+                TADDR IPEnd,
+                TADDR IPAskedFor,
+                TADDR GCStressCodeCopy,
+                GCEncodingInfo *pGCEncodingInfo,
+                SOSEHInfo *pEHInfo,
+                BOOL bSuppressLines,
+                BOOL bDisplayOffsets,
+                std::function<void(ULONG*, UINT*, BYTE*)> displayIL) const;
+    virtual void IsReturnAddress(
+                TADDR retAddr,
+                TADDR* whereCalled) const;
+    virtual BOOL GetExceptionContext (
+                TADDR stack,
+                TADDR PC,
+                TADDR *cxrAddr,
+                CROSS_PLATFORM_CONTEXT * cxr,
+                TADDR *exrAddr,
+                PEXCEPTION_RECORD exr) const;
+
+    // retrieve stack pointer, frame pointer, and instruction pointer from the target context
+    virtual TADDR GetSP(const CROSS_PLATFORM_CONTEXT & ctx) const  { return ctx.Ppc64leContext.R1; }
+    virtual TADDR GetBP(const CROSS_PLATFORM_CONTEXT & ctx) const  { return ctx.Ppc64leContext.R31; }
+    virtual TADDR GetIP(const CROSS_PLATFORM_CONTEXT & ctx) const  { return ctx.Ppc64leContext.Nip; }
+
+    virtual void  FillSimpleContext(StackTrace_SimpleContext * dest, LPVOID srcCtx) const;
+    virtual void  FillTargetContext(LPVOID destCtx, LPVOID srcCtx, int idx = 0) const;
+
+    virtual LPCSTR GetDumpStackHeading() const          { return s_DumpStackHeading; }
+    virtual LPCSTR GetDumpStackObjectsHeading() const   { return s_DSOHeading; }
+    virtual LPCSTR GetSPName() const                    { return s_SPName; }
+    virtual void GetGCRegisters(LPCSTR** regNames, unsigned int* cntRegs) const
+    { _ASSERTE(cntRegs != NULL); *regNames = s_GCRegs; *cntRegs = ARRAY_SIZE(s_GCRegs);}
+
+    virtual void DumpGCInfo(GCInfoToken gcInfoToken, unsigned methodSize, printfFtn gcPrintf, bool encBytes, bool bPrintHeader) const;
+
+    int StackWalkIPAdjustOffset() const { return 4; }
+
+private:
+    PPC64LEMachine()  {}
+    ~PPC64LEMachine() {}
+    PPC64LEMachine(const PPC64LEMachine& machine);      // undefined
+    PPC64LEMachine & operator=(const PPC64LEMachine&);  // undefined
+
+    static LPCSTR     s_DumpStackHeading;
+    static LPCSTR     s_DSOHeading;
+    static LPCSTR     s_GCRegs[29];
+    static LPCSTR     s_SPName;
+
+};
+#endif // SOS_TARGET_PPC64LE
+
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif // _MSC_VER
@@ -486,5 +555,21 @@ inline void ARM64Machine::FillTargetContext(LPVOID destCtx, LPVOID srcCtx, int i
     *dest = *(TGT_CTXT*)srcCtx;
 }
 #endif // SOS_TARGET_ARM64
+
+#ifdef SOS_TARGET_POWERPC64
+inline void PPC64LEMachine::FillSimpleContext(StackTrace_SimpleContext * dest, LPVOID srcCtx) const
+{
+    TGT_CTXT& src = *(TGT_CTXT*) srcCtx;
+    dest->StackOffset = src.R1;
+    dest->FrameOffset = src.R31;
+    dest->InstructionOffset = src.Nip;
+}
+
+inline void PPC64LEMachine::FillTargetContext(LPVOID destCtx, LPVOID srcCtx, int idx /*= 0*/) const
+{
+    TGT_CTXT* dest = (TGT_CTXT*)destCtx + idx;
+    *dest = *(TGT_CTXT*)srcCtx;
+}
+#endif // SOS_TARGET_POWERPC64
 
 #endif // __disasm_h__

@@ -19,6 +19,6 @@ namespace SOS.Hosting.DbgEng.Interop
             _iface = null;
         }
 
-        public object Interface => _iface != null ? Marshal.GetObjectForIUnknown((IntPtr)_iface) : null;
+        public object Interface => null;
     }
 }

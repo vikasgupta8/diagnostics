@@ -70,6 +70,10 @@ PCSTR GetRegName (UINT32 regnum)
     _snprintf_s(szRegName, ARRAY_SIZE(szRegName), sizeof(szRegName), "r%u", regnum);
     return szRegName;
 
+#elif defined(TARGET_POWERPC64)
+    //TODO vikas
+    return "???";
+
 #endif
 }
 

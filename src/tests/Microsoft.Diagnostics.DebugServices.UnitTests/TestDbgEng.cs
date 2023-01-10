@@ -103,7 +103,7 @@ namespace Microsoft.Diagnostics.DebugServices.UnitTests
                 HostServices.DefaultRetryCount = 5;
 
                 // Initialize the extension host
-                hr = HostServices.Initialize(sosPath);
+                hr = HostServices.InitializeImpl(sosPath);
                 if (hr != HResult.S_OK) {
                     throw new DiagnosticsException($"HostServices.Initialize({sosPath}) FAILED {hr:X8}");
                 }

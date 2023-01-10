@@ -10,6 +10,7 @@
     <OsFolderName Condition="$(PackageRID.StartsWith('linux-musl'))">Linux-musl</OsFolderName>
     <OsFolderName Condition="$(PackageRID.StartsWith('linux')) and '$(OsFolderName)' == ''">Linux</OsFolderName>
     <OsFolderName Condition="$(PackageRID.StartsWith('osx'))">OSX</OsFolderName>
+    <OsFolderName Condition="$(PackageRID.StartsWith('ppc64le'))">PPC64LE</OsFolderName>
   </PropertyGroup>
 
   <PropertyGroup>

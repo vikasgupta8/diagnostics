@@ -138,6 +138,12 @@ GetTargetMachine(ULONG processorType)
         targetMachine = ARM64Machine::GetInstance();
     }
 #endif // SOS_TARGET_ARM64
+#ifdef SOS_TARGET_POWERPC64
+    if (processorType == IMAGE_FILE_MACHINE_POWERPC)
+    {
+        targetMachine = PPC64LEMachine::GetInstance();
+    }
+#endif // SOS_TARGET_POWERPC64
     return targetMachine;
 }
 
@@ -166,6 +172,9 @@ ArchQuery(void)
                 break;
             case IMAGE_FILE_MACHINE_ARM64:
                 architecture = "arm64";
+                break;
+            case IMAGE_FILE_MACHINE_POWERPC:
+                architecture = "Ppc64le";
                 break;
         }
         ExtErr("SOS does not support the current target architecture '%s' (0x%04x). A 32 bit target may require a 32 bit debugger or vice versa. In general, try to use the same bitness for the debugger and target process.\n",

@@ -2,6 +2,11 @@
   "tools": {
     "dotnet": "7.0.100",
     "runtimes": {
+      "dotnet/ppc64le": [
+        "$(MicrosoftNETCoreApp31Version)",
+        "$(MicrosoftNETCoreApp60Version)",
+        "$(VSRedistCommonNetCoreSharedFrameworkx6470Version)"
+      ],
       "dotnet/x64": [
         "$(MicrosoftNETCoreApp31Version)",
         "$(MicrosoftNETCoreApp60Version)",
@@ -20,6 +25,6 @@
   },
   "msbuild-sdks": {
     "Microsoft.Build.NoTargets": "3.5.0",
-    "Microsoft.DotNet.Arcade.Sdk": "8.0.0-beta.22630.1"
+    "Microsoft.DotNet.Arcade.Sdk": "8.0.0-beta.22575.1"
   }
 }

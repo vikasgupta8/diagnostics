@@ -185,6 +185,8 @@ BOOL GcInfoDumper::ReportPointerRecord (
         REG(Lr,  Lr),
         { FIELD_OFFSET(T_CONTEXT, Sp) },
 #undef REG
+#elif defined(TARGET_POWERPC64)
+	// TODO vikas
 #else
 PORTABILITY_ASSERT("GcInfoDumper::ReportPointerRecord is not implemented on this platform.")
 #endif
@@ -202,6 +204,8 @@ PORTABILITY_ASSERT("GcInfoDumper::ReportPointerRecord is not implemented on this
 #elif defined(TARGET_ARM)
     iSPRegister = (FIELD_OFFSET(T_CONTEXT, Sp) - FIELD_OFFSET(T_CONTEXT, R0)) / sizeof(ULONG);
     UINT iBFRegister = m_StackBaseRegister;
+#elif defined(TARGET_POWERPC64)
+    iSPRegister = (FIELD_OFFSET(T_CONTEXT, R1) - FIELD_OFFSET(T_CONTEXT, R0)) / sizeof(ULONGLONG); // TODO vikas check
 #endif
 
 #if defined(TARGET_ARM) || defined(TARGET_ARM64)
@@ -597,6 +601,8 @@ GcInfoDumper::EnumerateStateChangesResults GcInfoDumper::EnumerateStateChanges (
     {
         *(ppVolatileReg+iReg) = &regdisp.pCurrentContext->X0 + iReg;
     }
+#elif defined(TARGET_POWERPC64)
+    // TODO vikas
 #else
 PORTABILITY_ASSERT("GcInfoDumper::EnumerateStateChanges is not implemented on this platform.")
 #endif

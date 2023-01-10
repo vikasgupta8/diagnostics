@@ -63,7 +63,7 @@ namespace SOS
             {
                 LLDBInitFile = Path.Combine(home, ".lldbinit");
             }
-            InstallLocation = Path.GetFullPath(Path.Combine(home, ".dotnet", "sos"));
+	    InstallLocation = System.IO.Directory.GetCurrentDirectory();
             SOSNativeSourcePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), rid);
             SOSManagedSourcePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "lib");
         }

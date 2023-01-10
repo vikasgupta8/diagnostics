@@ -78,7 +78,7 @@ namespace SOS.Extensions
         /// </summary>
         /// <param name="extensionPath">Path and filename of native extensions to callback</param>
         /// <returns>hresult</returns>
-        public static int Initialize(
+        public static int InitializeImpl(
             [MarshalAs(UnmanagedType.LPStr)] string extensionPath)
         {
             IntPtr extensionLibrary = default;
@@ -103,6 +103,12 @@ namespace SOS.Extensions
             Instance = new HostServices();
             return initialializeCallback(Instance.IHostServices);
         }
+
+	[UnmanagedCallersOnly]
+	public unsafe static void Initialize(sbyte *extensionPathPtr)
+	{
+  		InitializeImpl(new string(extensionPathPtr));
+	}
 
         private HostServices()
         {

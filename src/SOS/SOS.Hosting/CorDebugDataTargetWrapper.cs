@@ -107,6 +107,9 @@ namespace SOS.Hosting
                     case Architecture.Arm64:
                         platform = CorDebugPlatform.CORDB_PLATFORM_POSIX_ARM64;
                         break;
+		    case Architecture.Ppc64le:
+                        platform = CorDebugPlatform.CORDB_PLATFORM_POSIX_POWERPC64;
+                        break;
                     default:
                         return HResult.E_FAIL;
                 }

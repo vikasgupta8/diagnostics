@@ -1132,6 +1132,20 @@ LPCSTR ARM64Machine::s_SPName           = "sp";
 
 #endif // SOS_TARGET_ARM64
 
+#ifdef SOS_TARGET_POWERPC64
+///
+/// PPC64LEMachine implementation
+///
+LPCSTR PPC64LEMachine::s_DumpStackHeading = "ChildFP  RetAddr  Caller, Callee\n";
+LPCSTR PPC64LEMachine::s_DSOHeading       = "SP/REG  Object   Name\n";
+// Excluding r1, and r31 , which is are used for sp, and fp respectively.
+LPCSTR PPC64LEMachine::s_GCRegs[29]       = {"r0", "r2",  "r3",  "r4",  "r5",  "r6", "r7",
+                                             "r8", "r9",  "r10", "r12", "r13", "r14", "r15",
+                                             "r16", "r17", "r18",  "r19", "r20", "r21", "r22",
+                                             "r23", "r24", "r25",  "r26", "r27", "r28", "r29", "r30"};
+LPCSTR PPC64LEMachine::s_SPName           = "r1";
+
+#endif // SOS_TARGET_POWERPC64
 //
 // GCEncodingInfo class member implementations
 //
