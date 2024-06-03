@@ -87,6 +87,8 @@ inline TADDR GetSP(T_CONTEXT* context)
     return (TADDR)context->Sp;
 #elif defined(TARGET_RISCV64)
     return (TADDR)context->Sp;
+#elif defined(TARGET_POWERPC64)
+    return (TADDR)context->R1;
 #else
     _ASSERTE(!"nyi for platform");
 #endif
@@ -102,6 +104,8 @@ inline PCODE GetIP(T_CONTEXT* context)
     return (PCODE)context->Pc;
 #elif defined(TARGET_RISCV64)
     return (PCODE)context->Pc;
+#elif defined(TARGET_POWERPC64)
+    return (PCODE)context->Nip;
 #else
     _ASSERTE(!"nyi for platform");
 #endif

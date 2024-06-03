@@ -109,6 +109,10 @@ PCSTR GetRegName (UINT32 regnum)
     }
 
     return "???";
+#elif defined(TARGET_POWERPC64)
+    //TODO vikas
+    return "???";
+
 #endif
 }
 

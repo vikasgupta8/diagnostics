@@ -159,6 +159,7 @@ if (CLR_CMAKE_ENABLE_SANITIZERS)
     if (CLR_CMAKE_TARGET_OSX OR CLR_CMAKE_TARGET_MACCATALYST)
       function(getSanitizerRuntimeDirectory output)
         enable_language(C)
+	message("VIKAS --------------------  ${CMAKE_C_COMPILER}")
         execute_process(
           COMMAND ${CMAKE_C_COMPILER} -print-resource-dir
           OUTPUT_VARIABLE compilerResourceDir

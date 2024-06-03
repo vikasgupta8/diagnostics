@@ -223,6 +223,8 @@ BOOL GcInfoDumper::ReportPointerRecord (
         REG(fp, Fp),
         { offsetof(T_CONTEXT, Sp) },
 #undef REG
+#elif defined(TARGET_POWERPC64)
+	// TODO vikas
 #else
 PORTABILITY_ASSERT("GcInfoDumper::ReportPointerRecord is not implemented on this platform.")
 #endif
@@ -243,6 +245,8 @@ PORTABILITY_ASSERT("GcInfoDumper::ReportPointerRecord is not implemented on this
 #elif defined(TARGET_RISCV64)
     assert(!"unimplemented on RISCV64 yet");
     iSPRegister = 0;
+#elif defined(TARGET_POWERPC64)
+    iSPRegister = (FIELD_OFFSET(T_CONTEXT, R1) - FIELD_OFFSET(T_CONTEXT, R0)) / sizeof(ULONGLONG); // TODO vikas check
 #endif
 
 #if defined(TARGET_ARM) || defined(TARGET_ARM64)
@@ -641,6 +645,8 @@ GcInfoDumper::EnumerateStateChangesResults GcInfoDumper::EnumerateStateChanges (
 #elif defined(TARGET_RISCV64)
 #pragma message("Unimplemented for RISCV64 yet.")
     assert(!"unimplemented on RISCV64 yet");
+#elif defined(TARGET_POWERPC64)
+    // TODO vikas
 #else
 PORTABILITY_ASSERT("GcInfoDumper::EnumerateStateChanges is not implemented on this platform.")
 #endif

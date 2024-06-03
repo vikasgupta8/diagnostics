@@ -758,6 +758,8 @@ HRESULT CLRDebuggingImpl::FormatLongDacModuleName(_Inout_updates_z_(cchBuffer) W
     const WCHAR* pHostArch = W("arm64");
 #elif defined(HOST_RISCV64)
     const WCHAR* pHostArch = W("riscv64");
+#elif defined(HOST_POWERPC64)
+    const WCHAR* pHostArch = W("ppc64le");
 #else
     _ASSERTE(!"Unknown host arch");
     return E_NOTIMPL;

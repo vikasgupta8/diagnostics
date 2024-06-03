@@ -28,10 +28,10 @@
 #define GC_STATS
 #endif
 
-#if defined(TARGET_X86) || defined(TARGET_ARM)
+#if defined(TARGET_X86) || defined(TARGET_ARM) || defined(TARGET_POWERPC64)
     #define USE_LAZY_PREFERRED_RANGE       0
 
-#elif defined(TARGET_AMD64) || defined(TARGET_ARM64) || defined(TARGET_S390X) || defined(TARGET_LOONGARCH64) || defined(TARGET_RISCV64)
+#elif defined(TARGET_AMD64) || defined(TARGET_iARM64) || defined(TARGET_S390X) || defined(TARGET_LOONGARCH64) || defined(TARGET_RISCV64) || defined(TARGET_POWERPC64)
 
 #if defined(HOST_UNIX)
     // In PAL we have a smechanism that reserves memory on start up that is

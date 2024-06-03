@@ -2,11 +2,6 @@
   "tools": {
     "dotnet": "8.0.100",
     "runtimes": {
-      "dotnet": [
-        "$(MicrosoftNETCoreApp60Version)",
-        "$(MicrosoftNETCoreApp70Version)",
-        "$(VSRedistCommonNetCoreSharedFrameworkx6480Version)"
-      ],
       "dotnet/x86": [
         "$(MicrosoftNETCoreApp60Version)",
         "$(MicrosoftNETCoreApp70Version)",

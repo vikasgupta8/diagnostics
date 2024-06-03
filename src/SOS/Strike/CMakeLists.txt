@@ -25,6 +25,9 @@ endif()
 if(CLR_CMAKE_TARGET_ARCH_ARM64)
     message(STATUS "CLR_CMAKE_TARGET_ARCH_ARM64")
 endif()
+if(CLR_CMAKE_TARGET_ARCH_POWERPC64)
+    message(STATUS "CLR_CMAKE_TARGET_ARCH_POWERPC64")
+endif()
 
 if(CLR_CMAKE_HOST_ARCH_AMD64)
   message(STATUS "CLR_CMAKE_HOST_ARCH_AMD64")
@@ -69,6 +72,12 @@ elseif(CLR_CMAKE_HOST_ARCH_RISCV64)
   add_definitions(-D_TARGET_WIN64_=1)
   add_definitions(-DDBG_TARGET_64BIT)
   add_definitions(-DDBG_TARGET_WIN64=1)
+elseif(CLR_CMAKE_HOST_ARCH_POWERPC64)
+  message(STATUS "CLR_CMAKE_HOST_ARCH_POWERPC64")
+  add_definitions(-DSOS_TARGET_POWERPC64=1)
+  add_definitions(-D_TARGET_POWERPC64_=1)
+  add_definitions(-DDBG_TARGET_64BIT)
+  add_definitions(-DDBG_TARGET_POWERPC64=1)
 endif()
 
 add_definitions(-DSTRIKE)  
@@ -222,6 +231,10 @@ elseif(CLR_CMAKE_HOST_ARCH_ARM64)
 elseif(CLR_CMAKE_HOST_ARCH_RISCV64)
   set(SOS_SOURCES_ARCH
     disasmRISCV64.cpp
+  )
+elseif(CLR_CMAKE_HOST_ARCH_POWERPC64)
+  set(SOS_SOURCES_ARCH
+    disasmPPC64LE.cpp
   )
 endif()
 

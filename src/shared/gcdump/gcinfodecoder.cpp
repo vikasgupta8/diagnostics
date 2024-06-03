@@ -1879,6 +1879,83 @@ void GcInfoDecoder::ReportRegisterToGC(
     pCallBack(hCallBack, pObjRef, gcFlags DAC_ARG(DacSlotLocation(regNum, 0, false)));
 }
 
+#elif defined(TARGET_POWERPC64)
+OBJECTREF* GcInfoDecoder::GetRegisterSlot(
+                        int             regNum,
+                        PREGDISPLAY     pRD
+                        )
+{
+    // TODO check vikas register and purspose of function
+    _ASSERTE(regNum >= 0 && regNum <= 31);
+    _ASSERTE(regNum != 1);  // sp
+
+#ifdef FEATURE_REDHAWK
+    PTR_UIntNative* ppReg = &pRD->pR0;
+
+    return (OBJECTREF*)*(ppReg + regNum);
+#else
+    DWORD64 **ppReg;
+    ppReg = &pRD->pCurrentContextPointers->R31; //need to check which register to set and retuen vikas
+
+    return (OBJECTREF*)*(ppReg + regNum-31);
+#endif
+}
+
+#if defined(TARGET_UNIX) && !defined(FEATURE_REDHAWK)
+OBJECTREF* GcInfoDecoder::GetCapturedRegister(
+    int             regNum,
+    PREGDISPLAY     pRD
+    )
+{
+    // TODO check vikas register and purspose of function
+    _ASSERTE(regNum >= 0 && regNum <= 31);
+    _ASSERTE(regNum != 1);  // sp
+
+    // The fields of CONTEXT are in the same order as
+    // the processor encoding numbers.
+
+    DWORD64 *pR0 = &pRD->pCurrentContext->R0;
+
+    return (OBJECTREF*)(pR0 + regNum);
+}
+#endif // TARGET_UNIX && !FEATURE_REDHAWK
+
+bool GcInfoDecoder::IsScratchRegister(int regNum,  PREGDISPLAY pRD)
+{
+    // TODO check vikas register and purspose of function
+    _ASSERTE(regNum >= 0 && regNum <= 31);
+    _ASSERTE(regNum != 1);  // sp
+
+    return regNum == 1 || regNum == 2;
+}
+
+bool GcInfoDecoder::IsScratchStackSlot(INT32 spOffset, GcStackSlotBase spBase, PREGDISPLAY     pRD)
+{
+    // TODO check vikas register and purspose of function
+#ifdef FIXED_STACK_PARAMETER_SCRATCH_AREA
+    _ASSERTE( m_Flags & DECODE_GC_LIFETIMES );
+
+    TADDR pSlot = (TADDR) GetStackSlot(spOffset, spBase, pRD);
+    _ASSERTE(pSlot >= pRD->SP);
+
+    return (pSlot < pRD->SP + m_SizeOfStackOutgoingAndScratchArea);
+
+#else
+    return FALSE;
+#endif
+}
+
+void GcInfoDecoder::ReportRegisterToGC(  // PPC64LE
+                                int             regNum,
+                                unsigned        gcFlags,
+                                PREGDISPLAY     pRD,
+                                unsigned        flags,
+                                GCEnumCallback  pCallBack,
+                                void *          hCallBack)
+{
+	// TODO vikas
+}
+
 #else // Unknown platform
 
 OBJECTREF* GcInfoDecoder::GetRegisterSlot(
@@ -1966,6 +2043,8 @@ int GcInfoDecoder::GetStackReg(int spBase)
     int esp = 31;
 #elif defined(TARGET_RISCV64)
     int esp = 2;
+#elif defined(TARGET_POWERPC64)
+    int esp = 1;
 #endif
 
     if( GC_SP_REL == spBase )
